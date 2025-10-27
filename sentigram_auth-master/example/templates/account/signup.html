@@ -1,0 +1,52 @@
+{% extends "account/base_entrance.html" %}
+{% load allauth i18n %}
+
+{% block head_title %}
+    {% trans "Sign Up" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="auth-container">
+  <h1>{% trans "Sentigram" %}</h1>
+
+  {% if not SOCIALACCOUNT_ONLY %}
+    <form method="post" action="{% url 'account_signup' %}">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {% for err in form.non_field_errors %}
+            <p>{{ err }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% for field in form %}
+        <div class="form-group">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}
+            <small class="form-text text-muted">{{ field.help_text }}</small>
+          {% endif %}
+          {% if field.errors %}
+            <ul class="errorlist">
+              {% for e in field.errors %}<li>{{ e }}</li>{% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endfor %}
+      {% if redirect_field %}
+        {{ redirect_field }}
+      {% endif %}
+      <button type="submit" class="auth-button sign-in-button">
+        {% trans "REGISTER" %}
+      </button>
+    </form>
+  {% endif %}
+  <p class="signup-link-container">
+    {% blocktranslate %}
+      Already have an account? Then please <a href="{{ login_url }}">sign in</a>.
+    {% endblocktranslate %}
+  </p>
+</div>
+{% endblock content %}
+
+

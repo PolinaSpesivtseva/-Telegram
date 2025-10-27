@@ -1,0 +1,4 @@
+# django-allauth[mfa,saml,socialaccount]==0.60.1
+django-allauth[mfa,socialaccount]==0.60.1
+djangorestframework
+whitenoise

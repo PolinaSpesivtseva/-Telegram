@@ -1,0 +1,23 @@
+version: "3"
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./example:/code/example/
+      - ./allauth:/code/allauth
+      - ./db:/srv/db
+      - ./staticfiles:/code/staticfiles
+    env_file:
+      - .env
+    environment:
+      DATABASE_NAME: /srv/db/example.db
+    ports:
+      - $AUTH_PORT:$AUTH_PORT
+    command:
+      - make
+      - collectstatic
+      - migrate
+      - makeadmin
+      - runserver
