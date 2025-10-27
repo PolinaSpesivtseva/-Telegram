@@ -1,0 +1,44 @@
+version: "3"
+services:
+  db:
+    build: 
+      context: db/
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 27018:27017
+
+  auth:
+    build:
+      context: sentigram_auth/
+      dockerfile: Dockerfile
+    volumes:
+      - ./sentigram_auth/example:/code/example/
+      - ./sentigram_auth/allauth:/code/allauth
+      - ./sentigram_auth/db:/srv/db
+    env_file:
+      - .env
+    environment:
+      DATABASE_NAME: /srv/db/example.db
+    ports:
+      - $AUTH_PORT:$AUTH_PORT
+    command:
+      - make
+      - collectstatic
+      - migrate
+      - makeadmin
+      - runserver
+
+  web:
+    depends_on:
+      - auth
+      - db
+
+    build:
+      context: web_analitic/
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - $WEB_PORT:$WEB_PORT
